@@ -1,0 +1,15 @@
+Library/
+/Logs/
+/UserSettings/
+/Temp/
+.DS_Store
+
+# Visual Studio / VS Code cache and generated files
+.vscode/
+.vs/
+# *.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
