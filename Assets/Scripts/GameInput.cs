@@ -1,13 +1,26 @@
+using System;
 using UnityEngine;
 
 public class GameInput : MonoBehaviour
 {
+    public event EventHandler OnInteractAction;
 
     PlayerInputActions playerInputActions;
     public void Awake()
     {
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
+
+        playerInputActions.Player.Interact.performed += Interact_Performed;
+    }
+
+    private void Interact_Performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        // if (OnInteractAction != null)
+        // {
+        //     OnInteractAction(this, EventArgs.Empty);
+        // }
+        OnInteractAction?.Invoke(this, EventArgs.Empty);
     }
 
     public Vector2 GetMovementVectorNormalized()
@@ -27,7 +40,7 @@ public class GameInput : MonoBehaviour
         // if (Input.GetKey(KeyCode.D))
         //     axis.y = -1.0f;
 
-        axis = axis.normalized;
+        // axis = axis.normalized;
         return axis;
     }    
 }

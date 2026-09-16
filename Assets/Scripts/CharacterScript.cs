@@ -1,25 +1,72 @@
+using System;
 using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class CharacterScript : MonoBehaviour
 {
+    private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
     [SerializeField] private float movementMultiplier = 7.0f;
     [SerializeField] private GameObject playerVisual;
     private float rotationSpeed = 10f;
     [SerializeField] private GameInput gameInput;
+    [SerializeField] private LayerMask layerMask;
+    private Vector3 lastInteractDir;
  
     private void Start()
     {
         if (playerVisual == null) // can be overridden from inspector
             playerVisual = GameObject.FindWithTag("PlayerVisual");
+
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
+    }
+
+    private void GameInput_OnInteractAction(object sender, EventArgs e)
+    {
+        float interactDistance = 2.0f;
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, layerMask))
+        {
+            Debug.Log("Interact");
+        }
+        else
+        {
+            Debug.Log(lastInteractDir);
+        }
     }
 
 
     private void Update() {
+        HandleMovement();
+        // HandleInteraction();
+    }
+
+    private void HandleInteraction()
+    {
+        Vector2 axis = gameInput.GetMovementVectorNormalized();
+        Vector3 moveDir = new Vector3(axis.x, 0, axis.y);
+
+        float interactDistance = 2.0f;
+        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, layerMask))
+        {
+            Debug.Log("Interact");
+        }
+        else
+        {
+            Debug.Log("-");
+        }
+    }
+
+    
+    private void HandleMovement()
+    {
         
         Vector2 axis = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(axis.x, 0, axis.y);
+
+        if (moveDir != Vector3.zero)
+        {
+            lastInteractDir = moveDir;
+        }
 
         float movementDistance = Time.deltaTime * movementMultiplier;
         float playerRadius = 0.7f;
@@ -42,10 +89,6 @@ public class CharacterScript : MonoBehaviour
                 canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight , playerRadius, moveDirZ, movementDistance);
                 if (canMove)
                     moveDir = moveDirZ;
-                else
-                {
-                    // cant move anywhere
-                }
             }
         } 
 
@@ -53,12 +96,8 @@ public class CharacterScript : MonoBehaviour
         if (canMove)
             transform.position = transform.position + moveDir * movementDistance;
 
-        if (moveDir != Vector3.zero)
-            playerVisual.GetComponent<Animator>().SetBool("isMoving", true);
-        else 
-            playerVisual.GetComponent<Animator>().SetBool("isMoving", false);
+        playerVisual.GetComponent<Animator>().SetBool(IsMovingHash, moveDir != Vector3.zero);
 
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotationSpeed);
-
     }
 }
