@@ -18,22 +18,26 @@ public class CharacterScript : MonoBehaviour
         if (playerVisual == null) // can be overridden from inspector
             playerVisual = GameObject.FindWithTag("PlayerVisual");
 
-        // gameInput.OnInteractAction += GameInput_OnInteractAction;
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
     }
 
     private void GameInput_OnInteractAction(object sender, EventArgs e)
     {
         float interactDistance = 2.0f;
-        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, layerMask))
+        if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up, 0.5f, lastInteractDir, out RaycastHit raycastHit))
         {
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
                 clearCounter.Interact();
+            } else
+            {
+                Debug.Log("EXCEPTION: Unknown Collider");
+                Debug.Log(raycastHit.transform);
             }
         }
         else
         {
-            Debug.Log(lastInteractDir);
+            Debug.Log("INVALID COLLIDER");
         }
     }
 
@@ -47,38 +51,21 @@ public class CharacterScript : MonoBehaviour
 
     private void ManualInteract()
     {
-        // if (Input.GetKeyDown(KeyCode.E))
-        // {
-        //     Debug.Log("MANUALL: Manuall Interaction");
-
-        //     float interactDistance = 2.0f;
-        //     if (Physics.Raycast(transform.position, lastInteractDir, interactDistance))
-        //     {
-        //         Debug.Log("Interact");
-        //     }
-        //     else
-        //     {
-        //         Debug.Log(lastInteractDir);
-        //     }
-        // }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Ray ray = new Ray(transform.position, lastInteractDir);
-
-            RaycastHit[] hits = Physics.RaycastAll(ray, 10f);
-
-            Debug.Log($"Ray origin: {ray.origin}");
-            Debug.Log($"Ray direction: {ray.direction}");
-            Debug.Log($"Ray hits: {hits.Length}");
-
-            foreach (RaycastHit hit in hits)
+            float interactDistance = 2.0f;
+            if (Physics.Raycast(transform.position, lastInteractDir, interactDistance))
             {
-                Debug.Log(
-                    $"FOUND: {hit.collider.gameObject.name}, " +
-                    $"distance={hit.distance}, " +
-                    $"layer={LayerMask.LayerToName(hit.collider.gameObject.layer)}"
-                );
+                Debug.Log("Manual Interact");
             }
+            else
+            {
+                Debug.Log("Manual: No Collider");
+            }
+        }
+        if (Physics.Raycast(transform.position, lastInteractDir, 0.5f))
+        {
+            Debug.Log("AUTO INTERACT");
         }
     }
 
