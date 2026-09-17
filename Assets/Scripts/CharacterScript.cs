@@ -12,13 +12,13 @@ public class CharacterScript : MonoBehaviour
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask layerMask;
     private Vector3 lastInteractDir;
- 
+
     private void Start()
     {
         if (playerVisual == null) // can be overridden from inspector
             playerVisual = GameObject.FindWithTag("PlayerVisual");
 
-        gameInput.OnInteractAction += GameInput_OnInteractAction;
+        // gameInput.OnInteractAction += GameInput_OnInteractAction;
     }
 
     private void GameInput_OnInteractAction(object sender, EventArgs e)
@@ -26,7 +26,10 @@ public class CharacterScript : MonoBehaviour
         float interactDistance = 2.0f;
         if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, layerMask))
         {
-            Debug.Log("Interact");
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                clearCounter.Interact();
+            }
         }
         else
         {
@@ -35,31 +38,53 @@ public class CharacterScript : MonoBehaviour
     }
 
 
-    private void Update() {
-        HandleMovement();
-        // HandleInteraction();
-    }
-
-    private void HandleInteraction()
+    private void Update()
     {
-        Vector2 axis = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(axis.x, 0, axis.y);
+        HandleMovement();
+        Debug.DrawRay(transform.position, lastInteractDir * 2f, Color.red);
+        ManualInteract();
+    }
 
-        float interactDistance = 2.0f;
-        if (Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, interactDistance, layerMask))
+    private void ManualInteract()
+    {
+        // if (Input.GetKeyDown(KeyCode.E))
+        // {
+        //     Debug.Log("MANUALL: Manuall Interaction");
+
+        //     float interactDistance = 2.0f;
+        //     if (Physics.Raycast(transform.position, lastInteractDir, interactDistance))
+        //     {
+        //         Debug.Log("Interact");
+        //     }
+        //     else
+        //     {
+        //         Debug.Log(lastInteractDir);
+        //     }
+        // }
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("Interact");
-        }
-        else
-        {
-            Debug.Log("-");
+            Ray ray = new Ray(transform.position, lastInteractDir);
+
+            RaycastHit[] hits = Physics.RaycastAll(ray, 10f);
+
+            Debug.Log($"Ray origin: {ray.origin}");
+            Debug.Log($"Ray direction: {ray.direction}");
+            Debug.Log($"Ray hits: {hits.Length}");
+
+            foreach (RaycastHit hit in hits)
+            {
+                Debug.Log(
+                    $"FOUND: {hit.collider.gameObject.name}, " +
+                    $"distance={hit.distance}, " +
+                    $"layer={LayerMask.LayerToName(hit.collider.gameObject.layer)}"
+                );
+            }
         }
     }
 
-    
     private void HandleMovement()
     {
-        
+
         Vector2 axis = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(axis.x, 0, axis.y);
 
@@ -71,14 +96,14 @@ public class CharacterScript : MonoBehaviour
         float movementDistance = Time.deltaTime * movementMultiplier;
         float playerRadius = 0.7f;
         float playerHeight = 2.0f;
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight , playerRadius, moveDir, movementDistance);
-        
+        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, movementDistance);
+
         // Collision Detection
         if (!canMove)
         {
             // attempt movement on x axis only
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0);
-            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight , playerRadius, moveDirX, movementDistance);
+            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, movementDistance);
             if (canMove)
                 moveDir = moveDirX;
             else
@@ -86,11 +111,11 @@ public class CharacterScript : MonoBehaviour
                 // cant move on X
                 // attempt on Z
                 Vector3 moveDirZ = new Vector3(0, 0, moveDir.z);
-                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight , playerRadius, moveDirZ, movementDistance);
+                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, movementDistance);
                 if (canMove)
                     moveDir = moveDirZ;
             }
-        } 
+        }
 
 
         if (canMove)
