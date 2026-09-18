@@ -1,6 +1,4 @@
 using System;
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class CharacterScript : MonoBehaviour
@@ -23,21 +21,16 @@ public class CharacterScript : MonoBehaviour
 
     private void GameInput_OnInteractAction(object sender, EventArgs e)
     {
-        float interactDistance = 2.0f;
-        if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up, 0.5f, lastInteractDir, out RaycastHit raycastHit))
+        float interactDistance = 0.1f;
+        if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up, interactDistance, lastInteractDir, out RaycastHit raycastHit))
         {
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
                 clearCounter.Interact();
             } else
             {
-                Debug.Log("EXCEPTION: Unknown Collider");
-                Debug.Log(raycastHit.transform);
+                Debug.Log("EXCEPTION: Unknown Collider" + raycastHit.transform);
             }
-        }
-        else
-        {
-            Debug.Log("INVALID COLLIDER");
         }
     }
 
@@ -45,8 +38,8 @@ public class CharacterScript : MonoBehaviour
     private void Update()
     {
         HandleMovement();
-        Debug.DrawRay(transform.position, lastInteractDir * 2f, Color.red);
-        ManualInteract();
+        // Debug.DrawRay(transform.position, lastInteractDir * 2f, Color.red);
+        // ManualInteract();
     }
 
     private void ManualInteract()
