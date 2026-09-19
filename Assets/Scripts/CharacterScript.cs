@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class CharacterScript : MonoBehaviour
 {
+    public static CharacterScript Instance { get; private set; }
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter selectedCounter;
+    }
     private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
     [SerializeField] private float movementMultiplier = 7.0f;
     [SerializeField] private GameObject playerVisual;
@@ -10,6 +16,16 @@ public class CharacterScript : MonoBehaviour
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask layerMask;
     private Vector3 lastInteractDir;
+    private ClearCounter selectedCounter;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("Theres another player!!");
+        }
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -27,10 +43,18 @@ public class CharacterScript : MonoBehaviour
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
                 clearCounter.Interact();
-            } else
+                if (clearCounter != selectedCounter)
+                    SetSelectedCounter(clearCounter);
+            }
+            else
             {
                 Debug.Log("EXCEPTION: Unknown Collider" + raycastHit.transform);
+                SetSelectedCounter(null);
             }
+        }
+        else
+        {
+            SetSelectedCounter(null);
         }
     }
 
@@ -38,8 +62,18 @@ public class CharacterScript : MonoBehaviour
     private void Update()
     {
         HandleMovement();
-        // Debug.DrawRay(transform.position, lastInteractDir * 2f, Color.red);
-        // ManualInteract();
+        float playerRadius = 0.7f;
+        float playerHeight = 2.0f;
+        if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, lastInteractDir, out RaycastHit raycastHit))
+        {
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                if (clearCounter != selectedCounter || selectedCounter == null)
+                    SetSelectedCounter(clearCounter);
+            }
+            else SetSelectedCounter(null);
+        }
+        else SetSelectedCounter(null);
     }
 
     private void ManualInteract()
@@ -48,18 +82,12 @@ public class CharacterScript : MonoBehaviour
         {
             float interactDistance = 2.0f;
             if (Physics.Raycast(transform.position, lastInteractDir, interactDistance))
-            {
                 Debug.Log("Manual Interact");
-            }
             else
-            {
                 Debug.Log("Manual: No Collider");
-            }
         }
         if (Physics.Raycast(transform.position, lastInteractDir, 0.5f))
-        {
             Debug.Log("AUTO INTERACT");
-        }
     }
 
     private void HandleMovement()
@@ -104,5 +132,15 @@ public class CharacterScript : MonoBehaviour
         playerVisual.GetComponent<Animator>().SetBool(IsMovingHash, moveDir != Vector3.zero);
 
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotationSpeed);
+    }
+
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
+
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+        {
+            selectedCounter = selectedCounter
+        });
     }
 }
