@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/ClearCounter.cs" />
     <Compile Include="Assets/Scripts/PlayerInputActions.cs" />
+    <Compile Include="Assets/Scripts/KitchenObjectSO.cs" />
     <Compile Include="Assets/Scripts/GameInput.cs" />
     <Compile Include="Assets/Scripts/SelectedCounterVisual.cs" />
     <Compile Include="Assets/Scripts/CharacterScript.cs" />
