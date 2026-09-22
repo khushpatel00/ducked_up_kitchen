@@ -3,148 +3,134 @@ using UnityEngine;
 
 public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 {
-    public static CharacterScript Instance { get; private set; }
+	public static CharacterScript Instance { get; private set; }
 	[SerializeField] private Transform kitchenObjectHoldPoint;
 	private KitchenObject kitchenObject;
-    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
-    public class OnSelectedCounterChangedEventArgs : EventArgs
-    {
-        public ClearCounter selectedCounter;
-    }
-    private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
-    [SerializeField] private float movementMultiplier = 7.0f;
-    [SerializeField] private GameObject playerVisual;
-    private float rotationSpeed = 10f;
-    [SerializeField] private GameInput gameInput;
-    [SerializeField] private LayerMask layerMask;
-    private Vector3 lastInteractDir;
-    private ClearCounter selectedCounter;
+	public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+	public class OnSelectedCounterChangedEventArgs : EventArgs
+	{
+		public ClearCounter selectedCounter;
+	}
+	private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
+	[SerializeField] private float movementMultiplier = 7.0f;
+	[SerializeField] private GameObject playerVisual;
+	private float rotationSpeed = 10f;
+	[SerializeField] private GameInput gameInput;
+	[SerializeField] private LayerMask layerMask;
+	private Vector3 lastInteractDir;
+	private ClearCounter selectedCounter;
+	private float playerRadius = 0.7f;
+	private float playerHeight = 2.0f;
+	private GameObject equipedKitchenObject;
 
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("Theres another player!!");
-        }
-        Instance = this;
-    }
+	private void Awake()
+	{
+		if (Instance != null)
+		{
+			Debug.LogError("Theres another player!!");
+		}
+		Instance = this;
+	}
 
-    private void Start()
-    {
-        if (playerVisual == null) // can be overridden from inspector
-            playerVisual = GameObject.FindWithTag("PlayerVisual");
+	private void Start()
+	{
+		if (playerVisual == null) // can be overridden from inspector
+			playerVisual = GameObject.FindWithTag("PlayerVisual");
 
-        gameInput.OnInteractAction += GameInput_OnInteractAction;
-    }
+		gameInput.OnInteractAction += GameInput_OnInteractAction;
+	}
 
-    private void GameInput_OnInteractAction(object sender, EventArgs e)
-    {
-        float interactDistance = 0.1f;
-        if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up, interactDistance, lastInteractDir, out RaycastHit raycastHit))
-        {
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
-                clearCounter.Interact(this);
-                if (clearCounter != selectedCounter)
-                    SetSelectedCounter(clearCounter);
-            }
-            else
-            {
-                Debug.Log("EXCEPTION: Unknown Collider" + raycastHit.transform);
-                SetSelectedCounter(null);
-            }
-        }
-        else
-        {
-            SetSelectedCounter(null);
-        }
-    }
-
-
-    private void Update()
-    {
-        HandleMovement();
-        float playerRadius = 0.7f;
-        float playerHeight = 2.0f;
-        if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, lastInteractDir, out RaycastHit raycastHit))
-        {
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
-                if (clearCounter != selectedCounter || selectedCounter == null)
-                    SetSelectedCounter(clearCounter);
-            }
-            else SetSelectedCounter(null);
-        }
-        else SetSelectedCounter(null);
-    }
-
-    private void ManualInteract()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            float interactDistance = 2.0f;
-            if (Physics.Raycast(transform.position, lastInteractDir, interactDistance))
-                Debug.Log("Manual Interact");
-            else
-                Debug.Log("Manual: No Collider");
-        }
-        if (Physics.Raycast(transform.position, lastInteractDir, 0.5f))
-            Debug.Log("AUTO INTERACT");
-    }
-
-    private void HandleMovement()
-    {
-
-        Vector2 axis = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(axis.x, 0, axis.y);
-
-        if (moveDir != Vector3.zero)
-        {
-            lastInteractDir = moveDir;
-        }
-
-        float movementDistance = Time.deltaTime * movementMultiplier;
-        float playerRadius = 0.7f;
-        float playerHeight = 2.0f;
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, movementDistance);
-
-        // Collision Detection
-        if (!canMove)
-        {
-            // attempt movement on x axis only
-            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0);
-            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, movementDistance);
-            if (canMove)
-                moveDir = moveDirX;
-            else
-            {
-                // cant move on X
-                // attempt on Z
-                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z);
-                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, movementDistance);
-                if (canMove)
-                    moveDir = moveDirZ;
-            }
-        }
+	private void GameInput_OnInteractAction(object sender, EventArgs e)
+	{
+		float interactDistance = 0.1f;
+		if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up, interactDistance, lastInteractDir, out RaycastHit raycastHit))
+		{
+			if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+			{
+				clearCounter.Interact(this);
+				if (clearCounter != selectedCounter)
+					SetSelectedCounter(clearCounter);
+			}
+			else
+			{
+				Debug.Log("EXCEPTION: Unknown Collider" + raycastHit.transform);
+				SetSelectedCounter(null);
+			}
+		}
+		else
+		{
+			SetSelectedCounter(null);
+		}
+	}
 
 
-        if (canMove)
-            transform.position = transform.position + moveDir * movementDistance;
+	private void Update()
+	{
+		HandleMovement();
+		if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, lastInteractDir, out RaycastHit raycastHit))
+		{
+			if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+			{
+				if (clearCounter != selectedCounter || selectedCounter == null)
+					SetSelectedCounter(clearCounter);
+			}
+			else SetSelectedCounter(null);
+		}
+		else SetSelectedCounter(null);
+	}
+	private void HandleMovement()
+	{
 
-        playerVisual.GetComponent<Animator>().SetBool(IsMovingHash, moveDir != Vector3.zero);
+		Vector2 axis = gameInput.GetMovementVectorNormalized();
+		Vector3 moveDir = new Vector3(axis.x, 0, axis.y);
 
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotationSpeed);
-    }
+		if (moveDir != Vector3.zero)
+		{
+			lastInteractDir = moveDir;
+		}
 
-    private void SetSelectedCounter(ClearCounter selectedCounter)
-    {
-        this.selectedCounter = selectedCounter;
+		float movementDistance = Time.deltaTime * movementMultiplier;
+		float playerRadius = 0.7f;
+		float playerHeight = 2.0f;
+		bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, movementDistance);
 
-        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
-        {
-            selectedCounter = selectedCounter
-        });
-    }	
+		// Collision Detection
+		if (!canMove)
+		{
+			// attempt movement on x axis only
+			Vector3 moveDirX = new Vector3(moveDir.x, 0, 0);
+			canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, movementDistance);
+			if (canMove)
+				moveDir = moveDirX;
+			else
+			{
+				// cant move on X
+				// attempt on Z
+				Vector3 moveDirZ = new Vector3(0, 0, moveDir.z);
+				canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, movementDistance);
+				if (canMove)
+					moveDir = moveDirZ;
+			}
+		}
+
+
+		if (canMove)
+			transform.position = transform.position + moveDir * movementDistance;
+
+		playerVisual.GetComponent<Animator>().SetBool(IsMovingHash, moveDir != Vector3.zero);
+
+		transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotationSpeed);
+	}
+
+	private void SetSelectedCounter(ClearCounter selectedCounter)
+	{
+		this.selectedCounter = selectedCounter;
+
+		OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+		{
+			selectedCounter = selectedCounter
+		});
+	}	
 	public Transform GetKitchenObjectFollowTransform()
 	{
 		return kitchenObjectHoldPoint;
@@ -152,13 +138,21 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 	public void SetKitchenObject(KitchenObject kitchenObject)
 	{
 		this.kitchenObject = kitchenObject;
+		equipedKitchenObject = kitchenObject.gameObject;
 	}
 	public KitchenObject GetKitchenObject()
 	{
 		return kitchenObject;
 	}
-	public void ClearKitchenObject()
+	public void ClearKitchenObject(GameObject gameObject)
 	{
+		kitchenObject.DestroyKitchenObject(gameObject);
+		kitchenObject = null;
+	}
+	public void ClearSelfKitchenObject()
+	{
+		if (equipedKitchenObject != null)
+			kitchenObject.DestroyKitchenObject(equipedKitchenObject);
 		kitchenObject = null;
 	}
 	public bool HasKitchenObject()

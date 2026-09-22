@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class KitchenObject : MonoBehaviour
@@ -14,8 +15,9 @@ public class KitchenObject : MonoBehaviour
 	}
 	public void SetKitchenObjectParent (IKitchenObjectParent kitchenObjectParent)
 	{
-		if (this.kitchenObjectParent != null)
-			this.kitchenObjectParent.ClearKitchenObject();
+		// checks were done before reaching here
+		// if (this.kitchenObjectParent != null)
+		// 	this.kitchenObjectParent.ClearKitchenObject();
 
 
 		this.kitchenObjectParent = kitchenObjectParent;
@@ -27,4 +29,14 @@ public class KitchenObject : MonoBehaviour
 		transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform(); 
 		transform.localPosition = Vector3.zero;
 	}
+	public void DestroyKitchenObject(GameObject gameObject)
+	{
+		Debug.LogWarning("Destroying this GameObject");
+		Destroy(gameObject);
+	}
+
+    internal void DestroyKitchenObject(object equipedKitchenObject)
+    {
+        throw new NotImplementedException();
+    }
 }

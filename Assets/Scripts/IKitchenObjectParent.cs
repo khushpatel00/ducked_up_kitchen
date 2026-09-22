@@ -4,6 +4,6 @@ public interface IKitchenObjectParent
 	public Transform GetKitchenObjectFollowTransform();
 	public void SetKitchenObject(KitchenObject kitchenObject);
 	public KitchenObject GetKitchenObject();
-	public void ClearKitchenObject();
+	public void ClearKitchenObject(GameObject gameObject);
 	public bool HasKitchenObject();
 }

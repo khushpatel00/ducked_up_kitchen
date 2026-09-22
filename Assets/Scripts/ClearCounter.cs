@@ -4,27 +4,24 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectParent
 {
 	[SerializeField] private KitchenObjectSO kitchenObjectSO;
 	[SerializeField] private Transform CounterTop;
-	public ClearCounter secondClearCounter;
-	[SerializeField] private bool testing = false;
-
 	private KitchenObject kitchenObject;
+	private GameObject currentGameObject;
 
-	public void Update()
-	{
-		if (kitchenObject != null & testing && Input.GetKeyDown(KeyCode.T))
-		{
-			kitchenObject.SetKitchenObjectParent(secondClearCounter);
-		}
-	}
 	public void Interact(CharacterScript player)
 	{
-		if (kitchenObject == null)
+		if (kitchenObject == null) // add object on Counter
 		{
 			Transform objectTransform = Instantiate(kitchenObjectSO.prefab, CounterTop);
 			objectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
+			currentGameObject = objectTransform.gameObject;
 		}
-		else
+		else // take from the Counter
 		{
+			if (player.HasKitchenObject()) // avoid duplication
+			{
+				player.ClearSelfKitchenObject();
+			}
+			player.SetKitchenObject(kitchenObject);
 			kitchenObject.SetKitchenObjectParent(player);
 		}
 	}
@@ -40,8 +37,9 @@ public class ClearCounter : MonoBehaviour, IKitchenObjectParent
 	{
 		return kitchenObject;
 	}
-	public void ClearKitchenObject()
+	public void ClearKitchenObject(GameObject gameObject)
 	{
+		kitchenObject.DestroyKitchenObject(gameObject);
 		kitchenObject = null;
 	}
 	public bool HasKitchenObject()
