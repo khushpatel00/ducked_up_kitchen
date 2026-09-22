@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
 
-public class CharacterScript : MonoBehaviour
+public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 {
     public static CharacterScript Instance { get; private set; }
+	[SerializeField] private Transform kitchenObjectHoldPoint;
+	private KitchenObject kitchenObject;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
@@ -42,7 +44,7 @@ public class CharacterScript : MonoBehaviour
         {
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                clearCounter.Interact();
+                clearCounter.Interact(this);
                 if (clearCounter != selectedCounter)
                     SetSelectedCounter(clearCounter);
             }
@@ -142,5 +144,25 @@ public class CharacterScript : MonoBehaviour
         {
             selectedCounter = selectedCounter
         });
-    }
+    }	
+	public Transform GetKitchenObjectFollowTransform()
+	{
+		return kitchenObjectHoldPoint;
+	}
+	public void SetKitchenObject(KitchenObject kitchenObject)
+	{
+		this.kitchenObject = kitchenObject;
+	}
+	public KitchenObject GetKitchenObject()
+	{
+		return kitchenObject;
+	}
+	public void ClearKitchenObject()
+	{
+		kitchenObject = null;
+	}
+	public bool HasKitchenObject()
+	{
+		return kitchenObject != null;
+	}
 }
