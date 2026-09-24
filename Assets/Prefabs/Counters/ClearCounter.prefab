@@ -107,30 +107,19 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 209302401410414750, guid: 4e9af9077ce864b73b93e4071b9ff3a5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 567526334145845046}
+      addedObject: {fileID: 181729479147806078}
   m_SourcePrefab: {fileID: 100100000, guid: 4e9af9077ce864b73b93e4071b9ff3a5, type: 3}
 --- !u!4 &438481832010685559 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3294801716937054422, guid: 4e9af9077ce864b73b93e4071b9ff3a5, type: 3}
   m_PrefabInstance: {fileID: 3147084111665218721}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2284405267157420151 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3755832970291170518, guid: 4e9af9077ce864b73b93e4071b9ff3a5, type: 3}
-  m_PrefabInstance: {fileID: 3147084111665218721}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2975515132704128063}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2290a50398f04f5f9ac8b30977123e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ClearCounter
 --- !u!1 &2975515132704128063 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 209302401410414750, guid: 4e9af9077ce864b73b93e4071b9ff3a5, type: 3}
   m_PrefabInstance: {fileID: 3147084111665218721}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &567526334145845046
+--- !u!114 &181729479147806078
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,9 +128,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2975515132704128063}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c82c3e08971a4094950acc140140d98, type: 3}
+  m_Script: {fileID: 11500000, guid: b2290a50398f04f5f9ac8b30977123e4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ContainerCounter
+  m_EditorClassIdentifier: Assembly-CSharp::ClearCounter
   kitchenObjectSO: {fileID: 0}
   CounterTop: {fileID: 6234336916421569141}
 --- !u!1001 &4324987906284068277
@@ -196,18 +185,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5109772898665893586, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
-      propertyPath: clearCounter
-      value: 
-      objectReference: {fileID: 2284405267157420151}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4589716710238282922, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3129051163762088814}
   m_SourcePrefab: {fileID: 100100000, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
 --- !u!4 &266981840802380062 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4589716710238282923, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
+  m_PrefabInstance: {fileID: 4324987906284068277}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &266981840802380063 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4589716710238282922, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
+  m_PrefabInstance: {fileID: 4324987906284068277}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3129051163762088814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266981840802380063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ca7035fb3a94f9eae198a940a220a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectedCounterVisual
+  clearCounter: {fileID: 181729479147806078}
+  visualGameObject: {fileID: 5317213627430821626}
+--- !u!1 &5317213627430821626 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8489276541531669327, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
   m_PrefabInstance: {fileID: 4324987906284068277}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7613157326444869506
@@ -278,10 +290,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5109772898665893586, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
-      propertyPath: clearCounter
-      value: 
-      objectReference: {fileID: 2284405267157420151}
     - target: {fileID: 8489276541531669327, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
       propertyPath: m_IsActive
       value: 1

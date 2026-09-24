@@ -68,10 +68,10 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 		HandleMovement();
 		if (Physics.CapsuleCast(transform.position, transform.position + (Vector3.up * playerHeight), playerRadius, lastInteractDir, out RaycastHit raycastHit, 1f))
 		{
-			if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+			if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
 			{
-				if (clearCounter != selectedCounter || selectedCounter == null)
-					SetSelectedCounter(clearCounter);
+				if (baseCounter != selectedCounter || selectedCounter == null)
+					SetSelectedCounter(baseCounter);
 			}
 			else SetSelectedCounter(null);
 		}
