@@ -10,21 +10,13 @@ public class ContainerCounter : BaseCounter, IKitchenObjectParent
 
 	public override void Interact(CharacterScript player)
 	{
-		if (kitchenObject == null) // add object on Counter
-		{
-			Transform objectTransform = Instantiate(kitchenObjectSO.prefab, CounterTop);
-			objectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
-			currentGameObject = objectTransform.gameObject;
-		}
-		else // take from the Counter
-		{
-			if (player.HasKitchenObject())
-			{
-				player.ClearSelfKitchenObject();
-			}
-			player.SetKitchenObject(kitchenObject);
-			kitchenObject.SetKitchenObjectParent(player);
-		}
+		if (player.HasKitchenObject())
+			player.ClearSelfKitchenObject();
+		Transform objectTransform = Instantiate(kitchenObjectSO.prefab, CounterTop);
+		// objectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
+		objectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(player);
+		// currentGameObject = objectTransform.gameObject;
+		// player.SetKitchenObject(kitchenObject);
 	}
 
 	public Transform GetKitchenObjectFollowTransform()

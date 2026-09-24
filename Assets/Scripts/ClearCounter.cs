@@ -5,24 +5,15 @@ public class ClearCounter : BaseCounter, IKitchenObjectParent
 	[SerializeField] private KitchenObjectSO kitchenObjectSO;
 	[SerializeField] private Transform CounterTop;
 	private KitchenObject kitchenObject;
-	private GameObject currentGameObject;
 
 	public override void Interact(CharacterScript player)
 	{
-		if (kitchenObject == null) // add object on Counter
+		if (player.GetKitchenObject() != null) // player has a object
 		{
-			Transform objectTransform = Instantiate(kitchenObjectSO.prefab, CounterTop);
-			objectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
-			currentGameObject = objectTransform.gameObject;
-		}
-		else // take from the Counter
-		{
-			if (player.HasKitchenObject()) // avoid duplication
-			{
-				player.ClearSelfKitchenObject();
-			}
-			player.SetKitchenObject(kitchenObject);
-			kitchenObject.SetKitchenObjectParent(player);
+			if (kitchenObject != null) ClearKitchenObject(kitchenObject.gameObject); // clear out previous instance of KitchenObject
+			player.GetKitchenObject().SetKitchenObjectParent(this);
+			kitchenObject = player.GetKitchenObject();
+			player.ClearKitchenObjectRefrence();
 		}
 	}
 	public Transform GetKitchenObjectFollowTransform()

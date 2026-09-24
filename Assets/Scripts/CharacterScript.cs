@@ -21,7 +21,6 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 	private BaseCounter selectedCounter;
 	private float playerRadius = 0.7f;
 	private float playerHeight = 2.0f;
-	private GameObject equipedKitchenObject;
 
 	private void Awake()
 	{
@@ -137,7 +136,6 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 	public void SetKitchenObject(KitchenObject kitchenObject)
 	{
 		this.kitchenObject = kitchenObject;
-		equipedKitchenObject = kitchenObject.gameObject;
 	}
 	public KitchenObject GetKitchenObject()
 	{
@@ -150,12 +148,17 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 	}
 	public void ClearSelfKitchenObject()
 	{
-		if (equipedKitchenObject != null)
-			kitchenObject.DestroyKitchenObject(equipedKitchenObject);
+		if (kitchenObject != null)
+			kitchenObject.DestroyKitchenObject(kitchenObject.gameObject);
 		kitchenObject = null;
 	}
 	public bool HasKitchenObject()
 	{
 		return kitchenObject != null;
 	}
+
+    internal void ClearKitchenObjectRefrence()
+    {
+        kitchenObject = null;
+    }
 }
