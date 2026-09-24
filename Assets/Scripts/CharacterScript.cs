@@ -9,7 +9,7 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 	public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
 	public class OnSelectedCounterChangedEventArgs : EventArgs
 	{
-		public ClearCounter selectedCounter;
+		public BaseCounter selectedCounter;
 	}
 	private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
 	[SerializeField] private float movementMultiplier = 7.0f;
@@ -18,7 +18,7 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 	[SerializeField] private GameInput gameInput;
 	[SerializeField] private LayerMask layerMask;
 	private Vector3 lastInteractDir;
-	private ClearCounter selectedCounter;
+	private BaseCounter selectedCounter;
 	private float playerRadius = 0.7f;
 	private float playerHeight = 2.0f;
 	private GameObject equipedKitchenObject;
@@ -42,14 +42,13 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 
 	private void GameInput_OnInteractAction(object sender, EventArgs e)
 	{
-		float interactDistance = 0.1f;
-		if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up, interactDistance, lastInteractDir, out RaycastHit raycastHit))
+		if (Physics.CapsuleCast(transform.position, transform.position + (Vector3.up * playerHeight), playerRadius, lastInteractDir, out RaycastHit raycastHit, 1f))
 		{
-			if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+			if (raycastHit.transform.TryGetComponent(out BaseCounter counter))
 			{
-				clearCounter.Interact(this);
-				if (clearCounter != selectedCounter)
-					SetSelectedCounter(clearCounter);
+				counter.Interact(this);
+				if (counter != selectedCounter)
+					SetSelectedCounter(counter);
 			}
 			else
 			{
@@ -67,7 +66,7 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 	private void Update()
 	{
 		HandleMovement();
-		if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, lastInteractDir, out RaycastHit raycastHit))
+		if (Physics.CapsuleCast(transform.position, transform.position + (Vector3.up * playerHeight), playerRadius, lastInteractDir, out RaycastHit raycastHit, 1f))
 		{
 			if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
 			{
@@ -122,7 +121,7 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 		transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotationSpeed);
 	}
 
-	private void SetSelectedCounter(ClearCounter selectedCounter)
+	private void SetSelectedCounter(BaseCounter selectedCounter)
 	{
 		this.selectedCounter = selectedCounter;
 
