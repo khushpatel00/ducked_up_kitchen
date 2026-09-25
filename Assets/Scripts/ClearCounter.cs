@@ -10,7 +10,8 @@ public class ClearCounter : BaseCounter, IKitchenObjectParent
 	{
 		if (player.GetKitchenObject() != null) // player has a object
 		{
-			if (kitchenObject != null) ClearKitchenObject(kitchenObject.gameObject); // clear out previous instance of KitchenObject
+			if (kitchenObject != null) ClearKitchenObject(kitchenObject.gameObject);
+			else 
 			player.GetKitchenObject().SetKitchenObjectParent(this);
 			kitchenObject = player.GetKitchenObject();
 			player.ClearKitchenObjectRefrence();
