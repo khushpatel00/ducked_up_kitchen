@@ -8,13 +8,23 @@ public class ClearCounter : BaseCounter, IKitchenObjectParent
 
 	public override void Interact(CharacterScript player)
 	{
-		if (player.GetKitchenObject() != null) // player has a object
+		if (!HasKitchenObject())
 		{
-			if (kitchenObject != null) ClearKitchenObject(kitchenObject.gameObject);
-			else 
-			player.GetKitchenObject().SetKitchenObjectParent(this);
-			kitchenObject = player.GetKitchenObject();
-			player.ClearKitchenObjectRefrence();
+			// no KitchenObject here
+			if (player.HasKitchenObject())
+			{
+				player.GetKitchenObject().SetKitchenObjectParent(this);
+				player.ClearKitchenObjectRefrence();
+			} // else { //  player doesnt have anything  }
+		}
+		else
+		{
+			// theres KitchenObject here
+			if (!player.HasKitchenObject())
+			{
+				kitchenObject.SetKitchenObjectParent(player);
+				SetKitchenObject(null);
+			} // else { // player already has KitchenObject }
 		}
 	}
 	public Transform GetKitchenObjectFollowTransform()
