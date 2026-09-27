@@ -97,7 +97,7 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 		{
 			// attempt movement on x axis only
 			Vector3 moveDirX = new Vector3(moveDir.x, 0, 0);
-			canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, movementDistance);
+			canMove = moveDir.x != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, movementDistance);
 			if (canMove)
 				moveDir = moveDirX;
 			else
@@ -105,7 +105,7 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 				// cant move on X
 				// attempt on Z
 				Vector3 moveDirZ = new Vector3(0, 0, moveDir.z);
-				canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, movementDistance);
+				canMove = moveDir.z != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, movementDistance);
 				if (canMove)
 					moveDir = moveDirZ;
 			}
