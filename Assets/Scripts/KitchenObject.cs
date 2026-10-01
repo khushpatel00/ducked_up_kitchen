@@ -20,9 +20,15 @@ public class KitchenObject : MonoBehaviour
 		transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform(); 
 		transform.localPosition = Vector3.zero;
 	}
-	public void DestroyKitchenObject(GameObject gameObject)
+	public void DestroyKitchenObject(GameObject specifiedGameObject)
 	{
 		Debug.LogWarning("Destroying this GameObject");
+		kitchenObjectParent.ClearKitchenObject(specifiedGameObject);
+		Destroy(specifiedGameObject);
+	}
+	public void DestroySelf()
+	{
+		kitchenObjectParent.ClearKitchenObject(gameObject);
 		Destroy(gameObject);
 	}
 }
