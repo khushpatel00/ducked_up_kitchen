@@ -1,10 +1,8 @@
 using UnityEngine;
 
-public class CuttingCounter : BaseCounter, IKitchenObjectParent
+public class CuttingCounter : BaseCounter
 {
-
-	[SerializeField] private Transform CounterTop;
-	private KitchenObject kitchenObject; 
+	[SerializeField] private KitchenObjectSO cutKitchenObjectSO;
 	public override void Interact(CharacterScript player)
 	{
 		if (!HasKitchenObject())
@@ -31,30 +29,15 @@ public class CuttingCounter : BaseCounter, IKitchenObjectParent
 	{
 		if (HasKitchenObject())
 		{
-			// there is a KitchenObject
+			GetKitchenObject().DestroySelf();
+			Debug.Log("Generating KitchenObject" + kitchenObject);
 			
+			
+			// kitchenObject.SpawnKitchenObject(cutKitchenObjectSO, this);
+			
+			Transform kitchenObjectTransform = Instantiate(cutKitchenObjectSO.prefab);
+			kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
 		}
 	}
 
-	public void ClearKitchenObject(GameObject gameObject)
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public Transform GetKitchenObjectFollowTransform()
-	{
-		return CounterTop;
-	}
-	public void SetKitchenObject(KitchenObject kitchenObject)
-	{
-		this.kitchenObject = kitchenObject;
-	}
-	public KitchenObject GetKitchenObject()
-	{
-		return kitchenObject;
-	}
-	public bool HasKitchenObject()
-	{
-		return kitchenObject != null;
-	}
 }

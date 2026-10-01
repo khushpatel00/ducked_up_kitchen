@@ -1,10 +1,8 @@
 using UnityEngine;
 
-public class ClearCounter : BaseCounter, IKitchenObjectParent
+public class ClearCounter : BaseCounter
 {
 	[SerializeField] private KitchenObjectSO kitchenObjectSO;
-	[SerializeField] private Transform CounterTop;
-	private KitchenObject kitchenObject;
 
 	public override void Interact(CharacterScript player)
 	{
@@ -26,26 +24,5 @@ public class ClearCounter : BaseCounter, IKitchenObjectParent
 				SetKitchenObject(null);
 			} // else { // player already has KitchenObject }
 		}
-	}
-	public Transform GetKitchenObjectFollowTransform()
-	{
-		return CounterTop;
-	}
-	public void SetKitchenObject(KitchenObject kitchenObject)
-	{
-		this.kitchenObject = kitchenObject;
-	}
-	public KitchenObject GetKitchenObject()
-	{
-		return kitchenObject;
-	}
-	public void ClearKitchenObject(GameObject gameObject)
-	{
-		kitchenObject.DestroyKitchenObject(gameObject);
-		kitchenObject = null;
-	}
-	public bool HasKitchenObject()
-	{
-		return kitchenObject != null;
 	}
 }
