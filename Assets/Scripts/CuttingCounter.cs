@@ -8,7 +8,7 @@ public class CuttingCounter : BaseCounter
 		if (!HasKitchenObject())
 		{
 			// no KitchenObject here
-			if (player.HasKitchenObject())
+			if (player.HasKitchenObject() && isCarryingRecipe(player.GetKitchenObject().GetKitchenObjectSO()))
 			{
 				player.GetKitchenObject().SetKitchenObjectParent(this);
 				player.ClearKitchenObjectRefrence();
@@ -30,14 +30,12 @@ public class CuttingCounter : BaseCounter
 		if (HasKitchenObject())
 		{
 			KitchenObjectSO outputKitchenObject = GetKitchenObjectForCuttingRecipe(GetKitchenObject().GetKitchenObjectSO());
-			GetKitchenObject().DestroySelf();
-			// Debug.Log("Generating KitchenObject" + kitchenObject);
 			
-			
-			KitchenObject.Instance.SpawnKitchenObject(outputKitchenObject, this);
-			
-			// Transform kitchenObjectTransform = Instantiate(outputKitchenObject.prefab);
-			// kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
+			if (outputKitchenObject != null)
+			{	
+				GetKitchenObject().DestroySelf();		
+				KitchenObject.Instance.SpawnKitchenObject(outputKitchenObject, this);
+			}
 		}
 	}
 	
@@ -49,6 +47,15 @@ public class CuttingCounter : BaseCounter
 				return cuttingRecipe.output;
 		}
 		return null;
+	}
+	
+	public bool isCarryingRecipe(KitchenObjectSO kitchenObjectSO)
+	{
+		foreach (CuttingRecipeSO cuttingRecipe in CuttingRecipeSOs)
+		{
+			if (cuttingRecipe.input == kitchenObjectSO) return true;
+		}
+		return false;
 	}
 
 }
