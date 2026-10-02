@@ -275,3 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   CounterTop: {fileID: 868929269448605232}
+  CuttingRecipeSOs:
+  - {fileID: 11400000, guid: 7499d4171fe904e1d8f370b842a396ac, type: 2}
+  - {fileID: 11400000, guid: 6203ec6e940fc4a3a84bda2faa71d9fa, type: 2}
+  - {fileID: 11400000, guid: 9c1479a4af7d845e1b38c579b3455174, type: 2}

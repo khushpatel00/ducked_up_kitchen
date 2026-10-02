@@ -5,6 +5,8 @@ public class KitchenObject : MonoBehaviour
 {
 	[SerializeField] private KitchenObjectSO kitchenObjectSO;
 	private IKitchenObjectParent kitchenObjectParent;
+	public static KitchenObject Instance;
+	void Awake() { Instance = this; }
 	public IKitchenObjectParent GetKitchenObjectParent() 
 	{
 		return kitchenObjectParent;

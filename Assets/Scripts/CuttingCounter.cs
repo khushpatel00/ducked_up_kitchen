@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter
 {
-	[SerializeField] private KitchenObjectSO cutKitchenObjectSO;
+	[SerializeField] private CuttingRecipeSO[] CuttingRecipeSOs;
 	public override void Interact(CharacterScript player)
 	{
 		if (!HasKitchenObject())
@@ -29,15 +29,26 @@ public class CuttingCounter : BaseCounter
 	{
 		if (HasKitchenObject())
 		{
+			KitchenObjectSO outputKitchenObject = GetKitchenObjectForCuttingRecipe(GetKitchenObject().GetKitchenObjectSO());
 			GetKitchenObject().DestroySelf();
-			Debug.Log("Generating KitchenObject" + kitchenObject);
+			// Debug.Log("Generating KitchenObject" + kitchenObject);
 			
 			
-			// kitchenObject.SpawnKitchenObject(cutKitchenObjectSO, this);
+			KitchenObject.Instance.SpawnKitchenObject(outputKitchenObject, this);
 			
-			Transform kitchenObjectTransform = Instantiate(cutKitchenObjectSO.prefab);
-			kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
+			// Transform kitchenObjectTransform = Instantiate(outputKitchenObject.prefab);
+			// kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
 		}
+	}
+	
+	public KitchenObjectSO GetKitchenObjectForCuttingRecipe(KitchenObjectSO kitchenObjectSO)
+	{
+		foreach (CuttingRecipeSO cuttingRecipe in CuttingRecipeSOs)
+		{
+			if (cuttingRecipe.input == kitchenObjectSO) 
+				return cuttingRecipe.output;
+		}
+		return null;
 	}
 
 }

@@ -54,9 +54,15 @@ public class CharacterScript : MonoBehaviour, IKitchenObjectParent
 		{
 			if (raycastHit.transform.TryGetComponent(out BaseCounter counter))
 			{
-				counter.Interact(this);
-				if (counter != selectedCounter)
-					SetSelectedCounter(counter);
+				if (raycastHit.transform.TryGetComponent(out ContainerCounter containerCounter))
+				{
+					if (!HasKitchenObject())
+						counter.Interact(this);
+				}
+				else
+					counter.Interact(this);
+					if (counter != selectedCounter)
+						SetSelectedCounter(counter);
 			}
 			else
 			{
