@@ -12,11 +12,14 @@ public class ProgressBarUI : MonoBehaviour
 	{
 		cuttingCounter.OnProgressChanged += CuttingCounter_OnProgressChanged;
 		barImage.fillAmount = 0;
+		
+		SetIsVisible(false);
 	}
 
 	private void CuttingCounter_OnProgressChanged(object sender, CuttingCounter.OnProgressChanged_EventArgs e)
 	{
 		barImage.fillAmount = e.progressNormalized;
+		SetIsVisible(!(e.progressNormalized == 0 || e.progressNormalized > 1));
 	}
 	
 	public void SetIsVisible(bool isShown)

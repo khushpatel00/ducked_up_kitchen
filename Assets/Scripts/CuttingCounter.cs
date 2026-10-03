@@ -66,7 +66,7 @@ public class CuttingCounter : BaseCounter
 			if (!(currentCuttingProgress > 1))
 				CounterVisual.GetComponent<Animator>().SetTrigger("Cut");
 			
-			progressBarUI.SetIsVisible(!(currentCuttingProgress == 0 || currentCuttingProgress >= 1));
+			// progressBarUI.SetIsVisible(!(currentCuttingProgress == 0 || currentCuttingProgress >= 1));
 			
 			Debug.Log(cuttingProgress + " " + GetRequiredCuts(currentCuttingRecipe) + " " + (float)cuttingProgress / GetRequiredCuts(currentCuttingRecipe));
 
