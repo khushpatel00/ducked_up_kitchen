@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CuttingRecipeSO
   input: {fileID: 11400000, guid: 16f04535eed804643bd70ec06097b0b8, type: 2}
   output: {fileID: 11400000, guid: fcd186a58baa443d6b85f81c57ad2a4e, type: 2}
+  requiredCuts: 5
