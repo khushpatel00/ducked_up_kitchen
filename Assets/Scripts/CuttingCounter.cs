@@ -10,6 +10,7 @@ public class CuttingCounter : BaseCounter
 	}
 	[SerializeField] private CuttingRecipeSO[] CuttingRecipeSOs;
 	[SerializeField] private GameObject CounterVisual;
+	[SerializeField] private ProgressBarUI progressBarUI;
 	private int cuttingProgress;
 	private CuttingRecipeSO currentCuttingRecipe;
 
@@ -29,6 +30,7 @@ public class CuttingCounter : BaseCounter
 				{
 					progressNormalized = cuttingProgress / GetRequiredCuts(currentCuttingRecipe)
 				});
+				progressBarUI.SetIsVisible(true);
 			} // else { //  player doesnt have anything  }
 		}
 		else
@@ -43,6 +45,7 @@ public class CuttingCounter : BaseCounter
 				{
 					progressNormalized = cuttingProgress / GetRequiredCuts(currentCuttingRecipe)
 				});
+				progressBarUI.SetIsVisible(false);
 
 			} // else { // player already has KitchenObject }
 		}
@@ -62,6 +65,9 @@ public class CuttingCounter : BaseCounter
 			});
 			if (!(currentCuttingProgress > 1))
 				CounterVisual.GetComponent<Animator>().SetTrigger("Cut");
+			
+			progressBarUI.SetIsVisible(!(currentCuttingProgress == 0 || currentCuttingProgress >= 1));
+			
 			Debug.Log(cuttingProgress + " " + GetRequiredCuts(currentCuttingRecipe) + " " + (float)cuttingProgress / GetRequiredCuts(currentCuttingRecipe));
 
 			if (outputKitchenObject != null && cuttingProgress >= GetRequiredCuts(currentCuttingRecipe))

@@ -198,7 +198,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4944565325406905983}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -557,3 +557,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6203ec6e940fc4a3a84bda2faa71d9fa, type: 2}
   - {fileID: 11400000, guid: 9c1479a4af7d845e1b38c579b3455174, type: 2}
   CounterVisual: {fileID: 1913661736204937621}
+  progressBarUI: {fileID: 6077979740343830989}

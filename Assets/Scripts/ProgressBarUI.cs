@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Canvas))]
 public class ProgressBarUI : MonoBehaviour
 {
 
@@ -16,5 +17,10 @@ public class ProgressBarUI : MonoBehaviour
 	private void CuttingCounter_OnProgressChanged(object sender, CuttingCounter.OnProgressChanged_EventArgs e)
 	{
 		barImage.fillAmount = e.progressNormalized;
+	}
+	
+	public void SetIsVisible(bool isShown)
+	{
+		GetComponent<Canvas>().gameObject.SetActive(isShown);
 	}
 }
