@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/ProgressBarUI.cs" />
     <Compile Include="Assets/Scripts/ClearCounter.cs" />
+    <Compile Include="Assets/Scripts/TrashCounter.cs" />
     <Compile Include="Assets/Scripts/PlayerInputActions.cs" />
     <Compile Include="Assets/Scripts/ContainerCounter.cs" />
     <Compile Include="Assets/Scripts/KitchenObjectSO.cs" />
