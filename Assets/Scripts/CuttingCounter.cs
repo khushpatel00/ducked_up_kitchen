@@ -9,6 +9,7 @@ public class CuttingCounter : BaseCounter
 		public float progressNormalized;
 	}
 	[SerializeField] private CuttingRecipeSO[] CuttingRecipeSOs;
+	[SerializeField] private GameObject CounterVisual;
 	private int cuttingProgress;
 	private CuttingRecipeSO currentCuttingRecipe;
 
@@ -54,10 +55,13 @@ public class CuttingCounter : BaseCounter
 			KitchenObjectSO outputKitchenObject = GetKitchenObjectForCuttingRecipe(GetKitchenObject().GetKitchenObjectSO());
 
 			cuttingProgress++;
+			float currentCuttingProgress = (float)cuttingProgress / GetRequiredCuts(currentCuttingRecipe);
 			OnProgressChanged?.Invoke(this, new OnProgressChanged_EventArgs
 			{
-				progressNormalized = (float)cuttingProgress / GetRequiredCuts(currentCuttingRecipe),
+				progressNormalized = currentCuttingProgress
 			});
+			if (!(currentCuttingProgress > 1))
+				CounterVisual.GetComponent<Animator>().SetTrigger("Cut");
 			Debug.Log(cuttingProgress + " " + GetRequiredCuts(currentCuttingRecipe) + " " + (float)cuttingProgress / GetRequiredCuts(currentCuttingRecipe));
 
 			if (outputKitchenObject != null && cuttingProgress >= GetRequiredCuts(currentCuttingRecipe))
